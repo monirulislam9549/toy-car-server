@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const jwt = require("jsonwebtoken");
 const port = process.env.port || 5000;
@@ -31,7 +31,7 @@ async function run() {
 
     // test api
     app.get("/health", (req, res) => {
-      res.send("all is wellbcvxxxxx");
+      res.send("all is well");
     });
 
     // create= post
@@ -39,6 +39,36 @@ async function run() {
       const data = req.body;
       console.log(data);
       const result = await toyCollection.insertOne(data);
+      res.send(result);
+    });
+
+    // get = read
+    app.get("/allToy", async (req, res) => {
+      const result = await toyCollection.find().toArray();
+      console.log(result);
+      res.send(result);
+    });
+
+    // update = patch
+    app.patch("/toy/:id", async (req, res) => {
+      const id = req.params.id;
+      // console.log(id);
+      const body = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          ...body,
+        },
+      };
+      const result = await toyCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    });
+
+    // delete
+    app.delete("/toy/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await toyCollection.deleteOne(filter);
       res.send(result);
     });
 
