@@ -43,9 +43,19 @@ async function run() {
     });
 
     // get = read
-    app.get("/allToy", async (req, res) => {
-      const result = await toyCollection.find().toArray();
-      console.log(result);
+    app.get("/allToy/:text", async (req, res) => {
+      // console.log(req.params.category);
+      if (
+        req.params.text == "sportsCar" ||
+        req.params.text == "policeCar" ||
+        req.params.text == "miniTruck"
+      ) {
+        const result = await toyCollection
+          .find({ category: req.params.text })
+          .toArray();
+        return res.send(result);
+      }
+      const result = await toyCollection.find({}).toArray();
       res.send(result);
     });
 
