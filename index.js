@@ -76,7 +76,7 @@ async function run() {
     });
 
     // update = patch
-    app.patch("/toy/:id", async (req, res) => {
+    app.patch("/editToy/:id", async (req, res) => {
       const id = req.params.id;
       // console.log(id);
       const body = req.body;
@@ -104,6 +104,15 @@ async function run() {
       const result = await toyCollection
         .find({ email: req.params.email })
         .toArray();
+      res.send(result);
+    });
+
+    // toy details api
+    app.get("/toy/:id", async (req, res) => {
+      const id = req.params.id;
+      // console.log(updatedBook);
+      const filter = { _id: new ObjectId(id) };
+      const result = await toyCollection.findOne(filter);
       res.send(result);
     });
 
