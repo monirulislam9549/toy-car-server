@@ -34,6 +34,22 @@ async function run() {
       res.send("all is well");
     });
 
+    // search api
+    // creating index on two fields
+    const indexKeys = { name: 1, category: 1 };
+    const indexOptions = { name: "name" };
+    const result = await toyCollection.createIndex(indexKeys, indexOptions);
+
+    app.get("/searchToyName/:text", async (req, res) => {
+      const searchText = req.params.text;
+      const result = await toyCollection
+        .find({
+          $or: [{ name: { $regex: searchText, $options: "i" } }],
+        })
+        .toArray();
+      res.send(result);
+    });
+
     // create= post
     app.post("/postToy", async (req, res) => {
       const data = req.body;
@@ -79,6 +95,15 @@ async function run() {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const result = await toyCollection.deleteOne(filter);
+      res.send(result);
+    });
+
+    // user toys by email
+    app.get("/myToy/:email", async (req, res) => {
+      console.log(req.params.email);
+      const result = await toyCollection
+        .find({ email: req.params.email })
+        .toArray();
       res.send(result);
     });
 
