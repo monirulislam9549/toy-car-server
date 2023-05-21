@@ -24,7 +24,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     // Send a ping to confirm a successful connection
 
     const toyCollection = client.db("toyCollection").collection("toys");
@@ -36,9 +36,9 @@ async function run() {
 
     // search api
     // creating index on two fields
-    const indexKeys = { name: 1, category: 1 };
-    const indexOptions = { name: "name" };
-    const result = await toyCollection.createIndex(indexKeys, indexOptions);
+    // const indexKeys = { name: 1, category: 1 };
+    // const indexOptions = { name: "name" };
+    // const result = await toyCollection.createIndex(indexKeys, indexOptions);
 
     app.get("/searchToyName/:text", async (req, res) => {
       const searchText = req.params.text;
